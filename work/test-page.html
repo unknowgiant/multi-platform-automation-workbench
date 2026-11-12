@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>XX 业务平台测试台（自动化测试用）</title>
+<style>
+  body { font-family: 'Microsoft YaHei', sans-serif; margin: 40px; background: #f5f7fa; color: #222; }
+  h1 { font-size: 20px; }
+  .card { background: #fff; border: 1px solid #ddd; border-radius: 8px; padding: 18px; margin-bottom: 18px; max-width: 560px; }
+  .row { margin-bottom: 12px; }
+  .row label { display: inline-block; width: 100px; }
+  input[type="text"], select, textarea { width: 280px; padding: 6px; border: 1px solid #aaa; border-radius: 4px; }
+  button, .btn { padding: 6px 14px; border: 1px solid #888; border-radius: 4px; background: #f0f0f0; cursor: pointer; font-size: 13px; }
+  .btn-primary { background: #2563eb; color: #fff; border: none; }
+  .file-item { padding: 8px 0; border-bottom: 1px solid #eee; display: flex; justify-content: space-between; align-items: center; }
+  .status { font-weight: 600; margin-bottom: 8px; }
+  #result { margin-top: 12px; font-size: 12px; color: #2563eb; min-height: 18px; }
+</style>
+</head>
+<body>
+  <h1>XX 业务资料站（测试台）</h1>
+  <div class="card">
+    <div class="row"><label>工单编号</label><input type="text" id="ticketNo" name="ticketNo" placeholder="输入工单号"></div>
+    <div class="row"><label>地市</label>
+      <select id="city" name="city">
+        <option value="">请选择</option>
+        <option value="zhengzhou">郑州</option>
+        <option value="luoyang">洛阳</option>
+        <option value="kaifeng">开封</option>
+      </select></div>
+    <div class="row"><label>备注</label><textarea id="note" name="note" placeholder="补充说明"></textarea></div>
+    <div class="row"><label><input type="checkbox" id="urgent" name="urgent" value="1"> 加急处理</label></div>
+    <div class="row"><label>附件</label><input type="file" id="attach" name="attach"></div>
+    <div class="row"><button class="btn btn-primary" id="btnSubmit">提交单据</button></div>
+    <div id="result"></div>
+  </div>
+
+  <div class="card">
+    <div class="status">待下载文件列表</div>
+    <div class="file-item"><span>2026-07-基站巡检表.xlsx</span><a class="btn" href="#" id="dl1" onclick="fakeDownload('基站巡检表.xlsx');return false;">下载</a></div>
+    <div class="file-item"><span>2026-07-楼宇概算报表.docx</span><a class="btn" href="#" id="dl2" onclick="fakeDownload('楼宇概算报表.docx');return false;">下载</a></div>
+  </div>
+
+<script>
+  function fakeDownload(name) {
+    const blob = new Blob(['测试内容 ' + name], { type: 'text/plain' });
+    const a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = name;
+    document.body.appendChild(a);
+    a.click();
+    setTimeout(function () { a.remove(); URL.revokeObjectURL(a.href); }, 200);
+    document.getElementById('result').textContent = '已触发下载：' + name;
+  }
+  document.getElementById('btnSubmit').addEventListener('click', function () {
+    const t = document.getElementById('ticketNo').value;
+    const c = document.getElementById('city').value;
+    const u = document.getElementById('urgent').checked;
+    document.getElementById('result').textContent = '提交成功：' + t + ' / ' + c + (u ? ' / 加急' : '');
+  });
+</script>
+</body>
+</html>

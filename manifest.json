@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "多平台业务自动化工作台",
+  "version": "1.0.0",
+  "description": "浏览器操作录制与回放：把您在多平台上的下载/上传业务流程录一遍，之后自动执行。支持多平台管理、手动触发、定时轮询。",
+  "permissions": [
+    "storage",
+    "tabs",
+    "scripting",
+    "alarms",
+    "downloads",
+    "downloads.open",
+    "sidePanel",
+    "debugger"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "多平台业务自动化工作台",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "panel.html"
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
+  }
+}

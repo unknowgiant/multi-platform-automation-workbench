@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>多平台业务自动化工作台</title>
+<link rel="stylesheet" href="css/panel.css">
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="logo">流</div>
+    <div>
+      <h1>多平台业务自动化工作台</h1>
+      <div class="sub" id="topState">就绪</div>
+    </div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost" id="btnJobs" title="任务日志">任务</button>
+      <button class="btn btn-ghost" id="btnSettings" title="设置">设置</button>
+      <button class="btn btn-primary" id="btnAddPlatform">＋ 新建平台</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="section-title">我的平台</div>
+    <div id="platformList"></div>
+    <div class="section-title">最近任务</div>
+    <div id="jobList"></div>
+  </div>
+
+  <!-- 平台编辑弹窗 -->
+  <div class="mask" id="platformMask">
+    <div class="modal">
+      <h3 id="platformModalTitle">新建平台</h3>
+      <input type="hidden" id="fId">
+      <div class="form-grid">
+        <div class="full field"><label>平台名称 *</label>
+          <input type="text" id="fName" placeholder="例如：XX平台下载站"></div>
+        <div class="full field"><label>入口网址（URL）</label>
+          <input type="text" id="fUrl" placeholder="https://业务平台首页"></div>
+        <div class="field"><label>下载文件目录</label>
+          <input type="text" id="fDlDir" placeholder="D:\业务下载\平台A"></div>
+        <div class="field"><label>上传文件目录</label>
+          <input type="text" id="fUpDir" placeholder="D:\待上传\平台A"></div>
+        <div class="field"><label>定时轮询</label>
+          <select id="fSchedOn"><option value="0">关闭</option><option value="1">开启</option></select></div>
+        <div class="field"><label>轮询间隔（分钟）</label>
+          <input type="number" id="fSchedMin" min="1" value="30"></div>
+        <div class="field full"><label>轮询默认流程</label>
+          <select id="fSchedFlow">
+            <option value="download">下载流程</option>
+            <option value="upload">上传流程</option>
+            <option value="custom">自定义流程</option>
+          </select></div>
+      </div>
+      <div class="m-btns">
+        <button class="btn" onclick="closeModal('platformMask')">取消</button>
+        <button class="btn btn-primary" id="btnSavePlatform">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 流程录制弹窗 -->
+  <div class="mask" id="recMask">
+    <div class="modal">
+      <h3>录制流程 <span id="recTitle" style="color:var(--text3);font-size:12px"></span></h3>
+      <div class="hint" id="recHint">
+        1. 点击「开始录制」，浏览器将切换到目标页面<br>
+        2. 在页面上 <b>按真实操作</b> 走一遍流程（点击 / 输入 / 选择 / 上传 / 下载）<br>
+        3. 完成后回到本面板，点击「停止录制」即可生成步骤
+      </div>
+      <div class="m-btns">
+        <button class="btn" onclick="closeModal('recMask')">取消</button>
+        <button class="btn btn-primary" id="btnRecStart">开始录制</button>
+        <button class="btn btn-danger" id="btnRecStop" style="display:none">■ 停止录制</button>
+      </div>
+      <div class="field" id="recStepsWrap" style="display:none;margin-top:12px">
+        <label>已录步骤（可直接编辑修正后保存）</label>
+        <textarea id="recStepsJson" class="steps-preview" style="width:100%;min-height:140px;font-family:Consolas,monospace;font-size:11px"></textarea>
+        <div class="m-btns" style="margin-top:8px">
+          <button class="btn" id="btnRecDiscard">丢弃</button>
+          <button class="btn btn-primary" id="btnRecSave">保存为流程</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 设置弹窗 -->
+  <div class="mask" id="settingsMask">
+    <div class="modal">
+      <h3>设置</h3>
+      <div class="field"><label>下载自动归档（相对默认下载目录的子路径，如：D:\下载）</label>
+        <input type="text" id="sDownloadRoot" placeholder="D:\下载"></div>
+      <div class="field"><label>步骤默认超时（毫秒）</label>
+        <input type="number" id="sTimeout" value="15000" min="1000"></div>
+      <div class="hint">
+        · 下载归档：任务运行期间，平台产生的下载文件会自动归入平台「下载文件目录」（需为该目录在默认下载目录下的绝对路径或子路径）<br>
+        · 上传：文件从平台「上传目录」取；若文件不存在或页面不兼容，将降级为手动选择后点「继续」
+      </div>
+      <div class="m-btns">
+        <button class="btn" onclick="closeModal('settingsMask')">取消</button>
+        <button class="btn btn-primary" id="btnSaveSettings">保存</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast"></div>
+
+<script src="lib/dsl.js"></script>
+<script src="panel.js"></script>
+</body>
+</html>
